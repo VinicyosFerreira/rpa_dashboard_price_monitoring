@@ -5,7 +5,7 @@ class MercadolivreSpider(scrapy.Spider):
     name = "MercadoLivre"
     allowed_domains = ["lista.mercadolivre.com.br"]
     start_urls = ["https://lista.mercadolivre.com.br/notebooks"]
-    max_pages = 8
+    max_pages = 10
     offset = 0
 
     def parse(self, response):
