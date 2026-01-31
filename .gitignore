@@ -1,1 +1,11 @@
+## envoriment virtual
 .venv
+
+## cache python
+**__pycache__
+
+## data generate
+data
+
+## ipynb files
+**.ipynb
