@@ -17,6 +17,9 @@ Este projeto é uma ferramenta poderosa RPA para monitoramento de preços de pro
 
 **Streamlit**: Dashboard de dados
 
+## 📊📈 Dashboard completo da pipeline ETL
+<video src="./src/assets/video/demo.mp4" width="100%" controls></video>
+
 
 ## 📦Rodar o projeto
 Para executar o projeto, siga os seguintes passos:
