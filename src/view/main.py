@@ -19,7 +19,7 @@ average_price = df['currentPrice'].mean()
 col3.metric(label="Preço médio", value=f"R${average_price:.2f}")
 
 # Quais sao as lojas mais encontradas
-st.subheader("Lojas mais encontradas no sistema até a página 5")
+st.subheader("Lojas mais encontradas no sistema até a página 10")
 col1, col2 = st.columns([4, 2])
 top_10_stores = df['store'].value_counts().sort_values(ascending=False).head(15)
 col1.bar_chart(top_10_stores)

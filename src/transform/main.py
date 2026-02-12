@@ -1,6 +1,7 @@
 # %%
 import pandas as pd
 import datetime as dt 
+import os
 
  # read data json file
 df = pd.read_json('/home/vinicyos/python_projetos/monitoramento_preco/data/products.jsonl', lines=True)
@@ -53,7 +54,13 @@ df = df.drop(columns=['rating'])
 # create colum date with analysis 
 df['date'] = dt.datetime.now().strftime('%d/%m/%Y')
 
-df.to_csv('/home/vinicyos/python_projetos/monitoramento_preco/data/products.csv', index=False)
+file_path = '../../data/products.csv'
+if(os.path.isfile(file_path)): 
+    print("Arquivo existente")
+    df.to_csv('/home/vinicyos/python_projetos/monitoramento_preco/data/products.csv', index=False, mode='a', header=False)
+else: 
+    print("Arquivo nao existente")
+    df.to_csv('/home/vinicyos/python_projetos/monitoramento_preco/data/products.csv', index=False)
 
 
 
