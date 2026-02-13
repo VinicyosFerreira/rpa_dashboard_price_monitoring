@@ -1,6 +1,8 @@
 import streamlit as st
 import pandas as pd
 import os
+import plotly.express as px
+
 class View: 
 
     def execute(self):
@@ -14,7 +16,10 @@ class View:
         df = pd.read_csv('/home/vinicyos/python_projetos/monitoramento_preco/data/products.csv')
 
         st.subheader("KPIs")
-        col1, col2, col3 = st.columns(3)
+
+        # aumentar a largura das colunas
+        col1, col2, col3 = st.columns(3, gap="large")
+        st.set_page_config(layout="wide")
 
         total_itens = df.shape[0]
         col1.metric(label="Total de itens", value=total_itens)
@@ -27,23 +32,60 @@ class View:
 
         # Quais sao as lojas mais encontradas
         st.subheader("Lojas mais encontradas no sistema até a página 10")
-        col1, col2 = st.columns([4, 2])
-        top_10_stores = df['store'].value_counts().sort_values(ascending=False).head(15)
-        col1.bar_chart(top_10_stores)
-        col2.write(top_10_stores)
+        col1, col2 = st.columns([4 , 2])
+        store_count = df['store'].value_counts().sort_values(ascending=False).head(15).reset_index()
+        fig = px.bar(store_count, x="store", y="count", labels={"store": "Loja" , "count": "Quantidade"}, 
+                     color_discrete_sequence=px.colors.qualitative.Plotly)
+        col1.plotly_chart(fig)
+        col2.dataframe(
+            store_count,
+            hide_index=True,
+            column_config = {
+                "store": "Loja/Marca",
+                "count": "Quantidade"
+            }
+        )
 
         # Preço médio por loja
         st.subheader("Preço médio por loja")
         col1, col2 = st.columns([4, 2])
-        average_price_by_store = df.groupby('store')['currentPrice'].mean().sort_values(ascending=False).head(15)
-        col1.bar_chart(average_price_by_store)
-        col2.write(average_price_by_store)
+        average_price_by_store = df.groupby('store')['currentPrice'].mean().sort_values(ascending=False).head(15).reset_index()
+        fig2 = px.histogram(average_price_by_store, x="store", y="currentPrice", color_discrete_sequence=px.colors.qualitative.Bold, 
+                      labels={"store": "Loja", "currentPrice": "Preço médio"})
+        fig2.update_layout(
+            yaxis_tickprefix = 'R$ ',
+            yaxis_tickformat = ',.2f',
+            separators=",.",
+        )
+        col1.plotly_chart(fig2)
+        col2.dataframe(
+            average_price_by_store,
+            hide_index=True,
+            column_config = {
+                "store": "Loja/Marca",
+                "currentPrice": st.column_config.NumberColumn("Preço médio", format="R$ %.2f")
+            }
+        )
+        
 
         st.subheader("Lojas com melhores taxas de desconto")
-        col1, col2 = st.columns([4, 3])
+        col1, col2 = st.columns([4, 2])
         df['discout_rate'] = (1 - (df['currentPrice'] / df['oldPrice'])) * 100
-        rating_discount = df.groupby('store')['discout_rate'].mean().sort_values(ascending=False).head(15)
-        col1.line_chart(rating_discount)
-        col2.write(rating_discount)
+        rating_discount = df.groupby('store')['discout_rate'].mean().sort_values(ascending=False).head(15).reset_index()
+        fig3 = px.line(rating_discount, x="store", y="discout_rate", color_discrete_sequence=px.colors.qualitative.Vivid, 
+                      labels={"store": "Loja", "discout_rate": "Taxa de desconto"})
+        fig3.update_layout(
+            yaxis_tickformat = ',.2f',
+            yaxis_ticksuffix = ' %',
+        )
+        col1.plotly_chart(fig3)
+        col2.dataframe(
+            rating_discount,
+            hide_index=True,
+            column_config = {
+                "store": "Loja/Marca",
+                "discout_rate": st.column_config.NumberColumn("Taxa de desconto", format="%.2f %%")
+            }
+        )
 
             
