@@ -1,0 +1,7 @@
+[server]
+folderWatchBlacklist = [
+    "**/data/**",
+    "**/__pycache__/**",
+    "**/.venv/**",
+    "**/src/collect/collect/spiders/__pycache__/**",
+]
